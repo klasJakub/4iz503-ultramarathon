@@ -1,13 +1,15 @@
-# Windows thumbnail database files
-Thumbs.db
-ehthumbs.db
-Desktop.ini
+# Data soubory
+*.csv
+*.zip
+data/
 
-# Directory recesses
-$RECYCLE.BIN/
+# Jupyter checkpoints
+.ipynb_checkpoints/
 
-# Python
+# Python prostředí
+.venv/
 __pycache__/
+*.pyc
 *.py[cod]
 *$py.class
 *.so
@@ -30,14 +32,12 @@ share/python-wheels/
 *.egg
 MANIFEST
 
-# Virtual Environments
-.env
-.venv
-env/
-venv/
-ENV/
-env.bak/
-venv.bak/
+# OS soubory
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
 
 # Node/npm
 node_modules/
@@ -46,7 +46,7 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# IDEs and Editors
+# IDE a editory
 .idea/
 .vscode/
 *.suo
