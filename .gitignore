@@ -2,6 +2,7 @@
 *.csv
 *.zip
 data/
+TWO_CENTURIES_OF_UM_RACES
 
 # Jupyter checkpoints
 .ipynb_checkpoints/
