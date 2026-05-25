@@ -19,3 +19,6 @@ Zdroj: [Kaggle Dataset](https://www.kaggle.com/datasets/aiaiaidavid/the-big-data
   - `01_priprava_dat.ipynb` — Načtení, čištění a příprava dat pro další analýzu
 - **`data/`** — datové soubory (jsou lokálně ignorovány via `.gitignore` a nejsou součástí repozitáře)
 - **`outputs/`** — složka pro exportované vizualizace, grafy a výsledné datasety
+
+
+

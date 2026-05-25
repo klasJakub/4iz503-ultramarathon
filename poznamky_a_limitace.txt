@@ -1,0 +1,97 @@
+POZNÁMKY A LIMITACE — 4IZ503 Ultra Marathon Running
+=====================================================
+Průběžné poznámky k projektu (aktualizovat po každém notebooku)
+
+
+=== DATASET ===
+
+- Hlavní dataset: TWO_CENTURIES_OF_UM_RACES.csv (Kaggle), 7,5M záznamů 1798–2022
+- Metadata závodů: vlastní Excel (races_metadata_template.xlsx), 99 závodů, 33 matchováno přesně
+- Po čištění: 6 877 109 řádků, období 1990–2022
+
+Odstraněné záznamy (notebook 00):
+- athlete_country = 'XXX' (anonymní závodníci): 1 783 záznamů
+- year < 1990 (historická data s vysokým podílem chybějících hodnot): ~380 000 záznamů
+- distance_km > 500 (víceetapové závody nebo chyby): ~600 záznamů
+- gender = 'X': 46 záznamů
+- Split závody (duplicitní záznamy hlavních závodů): 182 901 záznamů
+
+
+=== LIMITACE DATASETU ===
+
+- athlete_id není globálně unikátní — je to lokální index v rámci závodu/roku.
+  Sloupec 'experience' (počet předchozích startů) je proto pouze aproximace.
+
+- surface a elevation dostupné jen pro 33 matchovaných závodů = 15,9 % datasetu.
+  Úlohy využívající metadata pracují pouze s tímto podsetem (~213K závodníků po filtraci).
+
+- month/season chyběl u 24 % záznamů kvůli nestandardním formátům dat (vícedenní závody
+  ve formátu "12.-13.10.2019"). Po opravě zbývá pouze 0,008 % null hodnot.
+
+- age null = 7,5 % (závodníci bez roku narození, převážně starší záznamy).
+
+- Dataset dominován USA, FRA, RSA, JPN — závěry nemusí platit globálně.
+
+- Ženy tvoří pouze 19,8 % datasetu — nižší statistická síla pro gender analýzy.
+
+- Duplicity 17 379 — lokální indexování athlete_id v rámci závodu, nejde o skutečné duplicity.
+
+- Fuzzy matching názvů závodů nefunguje — textová podobnost názvů neodpovídá
+  reálné podobnosti závodů. Metadata jsou proto omezena na 33 přesně matchovaných závodů.
+
+
+=== METODICKÉ POZNÁMKY ===
+
+- speed_cat v notebooku 00 počítán per distance_cat (kvantily 33/67).
+  V úlohách kde porovnáváme závodníky v rámci jednoho závodu je nutné přepočítat
+  speed_cat per event — viz notebook 01.
+
+- pb = procentní bod. Rozdíl mezi dvěma procenty.
+  Příklad: skupina A má 40 % rychlých, skupina B 30 % rychlých → rozdíl je 10 pb.
+  Říkáme "pb" ne "%" protože "o 10 % méně" by znamenalo 40 × 0,9 = 36 % (jiná hodnota).
+
+
+=== NOTEBOOK 00 — Příprava dat ===
+
+Limitace:
+- GutsMuths-Rennsteiglauf (GER) je klasifikován jako trail s "středním" D+,
+  ale jde fakticky o silniční/lesní závod s rychlými závodníky. Kontaminuje
+  kategorii "střední převýšení" v analýzách.
+
+Poznámky k prezentaci:
+- Ukázat workflow čištění dat jako důkaz pochopení dat
+- Zdůraznit netriviální JOIN dvou datasetů (1:n vztah)
+- Zmínit opravu parsování datumů (vícedenní závody)
+
+
+=== NOTEBOOK 01 — 4ft Úloha 1: Horská zkušenost u starších závodníků ===
+
+Nález:
+- Věkový handicap (vs 18-39 let) je na závodech s vysokým D+ výrazně menší
+  než na závodech se středním D+.
+- 40-49 let: střední D+ −9,9 pb, vysoké D+ −5,0 pb (nejmenší nevýhoda)
+- 50+ let:   střední D+ −26,9 pb, vysoké D+ −17,2 pb (menší nevýhoda než na středním)
+- Hypotéza "horské zkušenosti" potvrzena.
+
+Limitace:
+- Analýza pouze na 33 světových závodech s metadaty (15,9 % datasetu).
+- GutsMuths-Rennsteiglauf kontaminuje kategorii "střední D+" — de facto silniční závod.
+- Kategorie "nízké D+" chybí — v metadatech nemáme žádný čistě plochý trail závod.
+- Kauzalita není prokázána — korelace věku a výkonu na horách může být způsobena
+  i selekcí závodníků (na UTMB startují jen zkušení závodníci bez ohledu na věk).
+
+Poznámky k prezentaci:
+- Zdůraznit metodickou opravu: speed_cat per event místo per distance_cat
+- Business interpretace: marketing horských závodů na skupinu 40-49 a 50+
+- "Zkušenost beats youth" — silné sdělení pro závodní komunitu
+
+
+=== TODO — další notebooky ===
+
+[ ] 02 — 4ft Úloha 2: Nováčci na road vs. trail závodech
+[ ] 03 — CF Úloha 3: Sezónnost a výkonnost
+[ ] 04 — CF Úloha 4: Kontinent závodníka a typ závodu
+[ ] 05 — SD4ft Úloha 5: Kde jsou ženy rychlejší než muži?
+[ ] 06 — SD4ft Úloha 6: Zkušenosti a výkon dle vzdálenosti
+[ ] 07 — Prediktivní model: rozhodovací strom
+[ ] BI část: datový model, Power BI dashboard
